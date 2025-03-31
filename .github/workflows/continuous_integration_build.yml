@@ -13,7 +13,7 @@ jobs:
       with:
         path: sine_generator
     - name: continuous_integration:[math.c]:repository->checkout
-      uses actions/checkout@v4
+      uses: actions/checkout@v4
       with:
         repository: alic3dev/math.c
         path: math.c
