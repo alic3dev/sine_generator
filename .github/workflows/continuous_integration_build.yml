@@ -1,0 +1,24 @@
+name: continuous_integration_build
+on:
+  push:
+    branches: [ "core" ]
+  pull_request:
+    branches: [ "core" ]
+jobs:
+  continuous_integration_build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: continuous_integration:[sine-generator]:repository->checkout
+      uses: actions/checkout@v4
+      with:
+        path: sine-generator
+    - name: continuous_integration:[math.c]:repository->checkout
+      uses: actions/checkout@v4
+      with:
+        repository: alic3dev/math.c
+        path: math.c
+    - name: continuous_integration:[math.c]:make
+      run: cd math.c && mkdir -p objects && make
+    - name: continuous_integration:[sine-generator]:make
+      run: cd sine-generator && mkdir -p objects && make
+
