@@ -11,7 +11,7 @@ jobs:
     - name: continuous_integration:[sine-generator]:repository->checkout
       uses: actions/checkout@v4
       with:
-        path: sine_generator
+        path: sine-generator
     - name: continuous_integration:[math.c]:repository->checkout
       uses: actions/checkout@v4
       with:
