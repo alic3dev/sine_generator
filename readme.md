@@ -1,8 +1,12 @@
-# sine-generator
+# sine_generator
 
-Generates sine wave values.
+values_generate->{sine_wave}
 
-## Usage
+## usage
 
 `sine-generator amplitude precision waves`
+
+## copyright|copyleft
+
+> © [copyright|copyleft]->{alic3dev:[2024|2025]}:[all_lefts_reserved|all_rights_reserved]
 
