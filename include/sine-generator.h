@@ -1,7 +1,9 @@
-#ifndef __SND_H
-#define __SND_H
+#ifndef __sine_generator_h
+#define __sine_generator_h
 
-int main(int, char**);
+int main(
+  int,
+  char**
+);
 
 #endif
-
