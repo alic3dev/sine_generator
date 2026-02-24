@@ -1,26 +1,59 @@
-INCLUDE_DIRECTORY=include
+name=sine_generator
 
-MATH_DIRECTORY=../math.c
-MATH_INCLUDE_DIRECTORY=$(MATH_DIRECTORY)/include
-MATH_OBJECTS_DIRECTORY=$(MATH_DIRECTORY)/objects
+ifndef target_device_version
+target_device_version=26.1
+endif
 
-CC=gcc
-C_FLAGS=-O3 -I$(INCLUDE_DIRECTORY) -I$(MATH_INCLUDE_DIRECTORY)
+target_platform=arm64-apple-macos${target_device_version}
 
-OBJECTS_DIR=objects
-SOURCE_DIR=sources
+directory_sdk=${shell xcrun --sdk macosx${target_device_version} --show-sdk-path}
 
-SOURCE_FILES:=$(wildcard $(SOURCE_DIR)/*.c)
-OBJECT_FILES:=$(patsubst $(SOURCE_DIR)/%.c, $(OBJECTS_DIR)/%.o, $(SOURCE_FILES))
+target_version_clic3=0
+target_version_math_c=0
 
-OUT_FILE=sine-generator
+directory_include=include
+directory_objects=objects
+directory_output=output
+directory_sources=sources
 
-$(OUT_FILE): $(OBJECT_FILES)
-	$(CC) $(C_FLAGS) $(MATH_OBJECTS_DIRECTORY)/math.o $^ -o $@
+ifndef directory_clic3
+directory_clic3=../clic3
+endif
+directory_clic3_include=${directory_clic3}/include
+directory_clic3_library=${directory_clic3}/library/macos/release
 
-$(OBJECTS_DIR)/%.o: $(SOURCE_DIR)/%.c
-	$(CC) $(C_FLAGS) -c $< -o $@
+ifndef directory_math_c
+directory_math_c=../math_c
+endif
+directory_math_c_include=${directory_math_c}/include
+directory_math_c_library=${directory_math_c}/library/macos/release
 
-clean:
-	-rm $(OUT_FILE) $(OBJECTS_DIR)/*.o
+cc=clang
+c_flags_platform=-target ${target_platform} -isysroot ${directory_sdk}
+c_flags=${c_flags_platform} -O3 -I${directory_include} -I${directory_clic3_include} -I${directory_math_c_include}
 
+files_sources=${wildcard ${directory_sources}/*.c}
+files_objects=${patsubst ${directory_sources}/%.c,${directory_objects}/%.o,${files_sources}}
+
+file_clic3_library=${directory_clic3_library}/clic3.${target_version_clic3}.dylib
+file_math_c_library=${directory_math_c_library}/math_c.${target_version_math_c}.dylib
+
+file_output=${directory_output}/${name}
+
+files_libraries=${file_clic3_library} ${file_math_c_library}
+
+${file_output}: ${files_objects}
+	if [[ ! -d ${directory_output} ]]; then mkdir ${directory_output}; fi
+	${cc} ${c_flags} ${files_libraries} ${files_objects} -o ${file_output}
+
+${directory_objects}/%.o: ${directory_sources}/%.c
+	if [[ ! -d ${directory_objects} ]]; then mkdir ${directory_objects}; fi
+	${cc} ${c_flags} -c $< -o $@
+
+clean: clean_objects clean_output
+
+clean_objects:
+	-rm -r ${directory_objects} 2>/dev/null
+
+clean_output:
+	-rm -r ${directory_output} 2>/dev/null
