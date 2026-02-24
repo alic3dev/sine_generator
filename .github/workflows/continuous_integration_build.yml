@@ -1,24 +1,32 @@
 name: continuous_integration_build
 on:
   push:
-    branches: [ "core" ]
+    branches: ["core"]
   pull_request:
-    branches: [ "core" ]
+    branches: ["*"]
+env:
+  target_device_version: 15.5
 jobs:
   continuous_integration_build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-    - name: continuous_integration:[sine-generator]:repository->checkout
-      uses: actions/checkout@v4
+    - name: checkout:sine_generator
+      uses: actions/checkout@v5
       with:
-        path: sine-generator
-    - name: continuous_integration:[math.c]:repository->checkout
-      uses: actions/checkout@v4
+        path: sine_generator
+    - name: checkout:clic3
+      uses: actions/checkout@v5
       with:
-        repository: alic3dev/math.c
-        path: math.c
-    - name: continuous_integration:[math.c]:make
-      run: cd math.c && mkdir -p objects && make
-    - name: continuous_integration:[sine-generator]:make
-      run: cd sine-generator && mkdir -p objects && make
-
+        repository: alic3dev/clic3
+        path: clic3
+    - name: checkout:math_c
+      uses: actions/checkout@v5
+      with:
+        repository: alic3dev/math_c
+        path: math_c
+    - name: make:clic3
+      run: cd clic3 && make clic3_dylib target_device_version=${{ env.target_device_version }}
+    - name: make:math_c
+      run: cd math_c && make math_c_dylib target_device_version=${{ env.target_device_version }}
+    - name: make:sine_generator
+      run: cd sine_generator && make target_device_version=${{ env.target_device_version }}
