@@ -1,4 +1,4 @@
-#include <sine-generator.h>
+#include <sine_generator.h>
 
 #include <clic3_char_arrays.h>
 
