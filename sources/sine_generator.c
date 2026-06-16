@@ -10,96 +10,109 @@ int main(
   int length_parameters,
   char** parameters
 ) {
-  float amplitude = 1;
-  float precision = 100;
+  float amplitude = (
+    0x01
+  );
 
-  unsigned int length_waves = 2;
+  float precision = (
+    0x64
+  );
+
+  unsigned int length_waves = (
+    0x02
+  );
 
   unsigned char status_conversion;
 
   if (
-    length_parameters > 1
+    length_parameters >
+    0x01
   ) {
     status_conversion = (
       clic3_char_array_to_float(
         parameters[
-          1
+          0x01
         ],
         &amplitude
       )
     );
 
     if (
-      status_conversion != 0
+      status_conversion !=
+      0x00
     ) {
       fprintf(
         stderr,
         "invalid_amplitude->{%s};\n",
         parameters[
-          1
+          0x01
         ]
       );
 
       return (
-        1
+        0x01
       );
     }
   }
 
   if (
-    length_parameters > 2
+    length_parameters >
+    0x02
   ) {
     status_conversion = (
       clic3_char_array_to_float(
         parameters[
-          2
+          0x02
         ],
         &precision
       )
     );
 
     if (
-      status_conversion != 0
+      status_conversion !=
+      0x00
     ) {
       fprintf(
         stderr,
         "invalid_precision->{%s};\n",
         parameters[
-          2
+          0x02
         ]
       );
 
       return (
-        1
+        0x01
       );
     }
   }
 
   if (
-    length_parameters > 3
+    length_parameters >
+    0x03
   ) {
     status_conversion = (
       clic3_char_array_to_unsigned_int(
         parameters[
-          3
+          0x03
         ],
         &length_waves
       )
     );
 
     if (
-      status_conversion != 0
+      status_conversion !=
+      0x00
     ) {
       fprintf(
         stderr,
         "invalid_length_waves->{%s};\n",
         parameters[
-          3
+          0x03
         ]
       );
 
       return (
-        1
+        0x01
       );
     }
   }
@@ -107,23 +120,36 @@ int main(
   float amplitude_increment = (
     amplitude /
     precision *
-    2.0f
+    0x02
   );
 
   for (
-    unsigned int index_wave = 0;
-    index_wave < length_waves;
+    unsigned int index_wave = (
+      0x00
+    );
+    (
+      index_wave <
+      length_waves
+    );
     ++index_wave
   ) {
     unsigned char inversion = (
       index_wave %
-      2
+      0x02
     );
 
     for (
-      float index_y = -amplitude;
-      index_y <= amplitude;
-      index_y += amplitude_increment
+      float index_y = -(
+        amplitude
+      );
+      (
+        index_y <=
+        amplitude
+      );
+      index_y = (
+        index_y +
+        amplitude_increment
+      )
     ) {
       float value_y = (
         math_c_circle_point_y_get(
@@ -133,7 +159,8 @@ int main(
       );
 
       if (
-        inversion == 1
+        inversion ==
+        0x01
       ) {
         printf(
           "%f\n",
@@ -149,6 +176,6 @@ int main(
   }
 
   return (
-    0
+    0x00
   );
 }
